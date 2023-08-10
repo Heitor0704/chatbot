@@ -1,0 +1,44 @@
+{
+  "name": "eschema",
+  "version": "1.2.0",
+  "description": "Eschema Bots",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "start-dev": "nodemon index.json",
+    "build": "pkg ."
+  },
+  "keywords": [
+    "WhatsApp"
+  ],
+  "author": {
+    "name": "Heitor Lopes Rabelo",
+    "email": "heitorlopes97@gmail.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.4.0",
+    "axios": "^1.4.0",
+    "baileys": "^6.0.9",
+    "express": "^4.18.2",
+    "fs": "0.0.1-security",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.7.2"
+  },
+  "pkg": {
+    "assets": [
+      "client/**/*"
+    ],
+    "targets": [
+      "node16-linux-x64",
+      "node16-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "devDependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "sucrase": "^3.34.0"
+  }
+}

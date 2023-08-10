@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Eschema Bots</title>
+	<meta name="description" content="Enviar mensagens via WhatsApp automaticamente.">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"> 
+	<link rel="stylesheet" type="text/css" href="./assets/main.css">
+</head>
+
+<body>
+	<header>
+		<div>
+			<p><img src="./assets/logo.svg"></p>
+	</header>
+	<div class="scan hidden">
+		<script>
+			const resizeScan = () => {
+				const scanWindow = document.querySelector(".scan")
+				const scanWindowContent = document.querySelector(".scan .content")
+				if (!scanWindow.classList.contains('hidden')) {
+					scanWindowContent.style.height = document.querySelector(".scan .content > .body").clientHeight + 104 + 'px'
+					// console.log()
+				} else {
+					// getComputedStyle(scanWindowContent).getPropertyValue('--var')
+					// console.log(scanWindowContent.clientWidth).
+					scanWindowContent.style.height = getComputedStyle(scanWindowContent).getPropertyValue('--pos') == ' inflow' ? '88px' : '72px'
+				}
+			}
+
+			const toggleScanWindow = () => {
+				document.querySelector('.scan').classList.toggle('hidden')
+				resizeScan()
+			}
+
+			window.addEventListener('resize', function (event) {
+				resizeScan()
+			}, true);
+
+			window.addEventListener('scroll', function (event) {
+				resizeScan()
+			}, true);
+		</script>
+		<div class="backdrop" onclick="toggleScanWindow()"></div>
+		<div class="card content">
+			<div class="title">
+				<h4>Conectar</h4>
+				<button class="toggle-scan" onclick="toggleScanWindow()">
+					<div class="icon-close">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
+							viewBox="0 0 16 16">
+							<path
+								d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+						</svg>
+					</div>
+					<div class="icon-open">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill"
+							viewBox="0 0 16 16">
+							<path
+								d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+						</svg>
+					</div>
+				</button>
+			</div>
+			<div class="body">
+				<section class="middle">
+					<div class="guide-sec">
+						<div class="card">
+							<div class="title">Instruções</div>
+							<div class="body">
+								<ol>
+<li>Escaneie o código QR a seguir com seu aplicativo WhatsApp, como o Whatsapp Web ou pelo próprio APP.</Sli></a></b></li>
+								</ol>
+							</div>
+						</div>
+					</div>
+					<div class="qr-wrapper">
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"
+							crossorigin="anonymous"></script>
+						<div class="card">
+							<div class="title">QR Code</div>
+							<div class="body">
+								<img src="./assets/loader.gif" alt="loading" id="qrcode">
+							</div>
+						</div>
+					</div>
+					<script>
+						const qrcode = document.getElementById("qrcode")
+						const socket = io()
+
+						socket.on("qr", src => {
+							qrcode.setAttribute("src", src)
+							qrcode.setAttribute("alt", "qrcode")
+						})
+
+						socket.on("qrstatus", src => {
+							qrcode.setAttribute("src", src)
+							qrcode.setAttribute("alt", "loading")
+						})
+
+						socket.on("log", log => {
+							console.log(log)
+						})
+					</script>
+				</section>
+			</div>
+		</div>
+	</div>
+	<main>
+		<section class="preview-card preview-hidden">
+			<div class="card">
+				<div class="title">Visualizar</div>
+				<div class="body">
+					<p>As mensagens aparecerão aqui.</p>
+					<div class="outer-preview-wrapper">
+						<div class="preview-wrapper"></div>
+					</div>
+					<div class="footer">
+						<div></div>
+						<button id="send" onclick="sendMessages()">Enviar</button>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="middle">
+			<div>
+				<div class="card data-area">
+					<div class="title">Disparo Automático</div>
+					<div class="body data-input">
+						<div class="table-wrapper">
+							<table>
+								<thead></thead>
+								<tbody></tbody>
+							</table>
+						</div>
+						<div class="pull-tab"></div>
+						<textarea id="data" autofocus
+							placeholder="Insira os dados copiados de uma planilha Excel ou Google Sheets. Certifique-se de que a primeira linha seja o cabeçalho dos dados e a primeira coluna seja o número do destinatário."></textarea>
+					</div>
+					<div class="footer">
+						<button id="format" onclick="formatData()">Formatar</button>
+						<button class="outline" id="reset" onclick="resetData()">Limpar</button>
+						<button class="outline" id="edit" onclick="editData()">Editar</button>
+					</div>
+				</div>
+			</div>
+			<div class="progress-area-wrapper">
+				<div class="card progress-area">
+					<div class="title">Progresso</div>
+					<div class="body">
+						<h3>2/6</h3>
+						<p class="loading-dots">Enviando Mensagens</p>
+					</div>
+				</div>
+			</div>
+			<div class="template-area-wrapper">
+				<div class="card template-area">
+					<div class="title">Template de Mensagens</div>
+					<div class="body">
+						<div class="pull-tab"></div>
+						<textarea id="template" placeholder="Escreva aqui o seu template de mensagens. Utilize os nomes dos cabeçalhos para criar mensagens dinâmicas. Exemplo: {nome}"></textarea>
+					</div>
+					<div class="footer">
+						<div></div>
+						<button id="preview" onclick="previewMessage()">Visualizar</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+	<script src="./assets/main.js"></script>
+</body>
+
+</html>
