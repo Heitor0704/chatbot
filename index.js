@@ -129,6 +129,7 @@ async function connectToWhatsApp() {
     axios.get(url+"mensagem="+fullMessage+"&telefone="+contato+"&nome="+baileysMessage.pushName)
       .then(response => {
       })
+    mensagem = "";
   }
   })
 }
