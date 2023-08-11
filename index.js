@@ -44,15 +44,7 @@ function connectionUpdate(update) {
     qrcode.toDataURL(qr, (err, url) => {
       sock?.emit("qr", url)
       sock?.emit("log","Escaneie o QR Code")
-
-      //Copiando o QRCode para a pasta TEMP
-      var img = url.replace(/^data:image\/\w+;base64,/, "");
-      var imgbuf = Buffer.from(img, 'base64');
-      fs.writeFile("../temp/chatbot-"+port+".png", imgbuf, { overwrite: true }, function (err) {
-      if (err) throw err;
-        console.log('QR registrado.');
-      });
-      
+  
     })
   }
 
@@ -70,16 +62,7 @@ function connectionUpdate(update) {
     qr = ''
     sock?.emit("qrstatus", "./assets/check.svg")
     sock?.emit("log", "WhatsApp conectado!")
-
-    //Deletando QRCode da pasta TEMP
-    fs.stat("../temp/chatbot-"+port+".png", function (err, stats) {
-      if(err){}
-      else{fs.unlink("../temp/chatbot-"+port+".png",function(err){
-      if(err){}
-      else{console.log('Qr Code deletado com sucesso.');}});
-      }
-   });
-    
+   
   }
 
   if (update.connection === 'close') {
@@ -143,8 +126,7 @@ async function connectToWhatsApp() {
   {
     mensagem = fullMessage;
     var contato = baileysMessage.key.remoteJid.substring(0,baileysMessage.key.remoteJid.indexOf("@"));
-    var data = new Date();
-    axios.get(url+"mensagem="+fullMessage+"&telefone="+contato+"&nome="+baileysMessage.pushName+"&data="+data.toDateString())
+    axios.get(url+"mensagem="+fullMessage+"&telefone="+contato+"&nome="+baileysMessage.pushName)
       .then(response => {
       })
   }
