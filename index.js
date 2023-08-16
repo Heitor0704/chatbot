@@ -182,7 +182,43 @@ app.post("/send-message", async (req, res) => {
       })
   }
 })
-
+//Enviando mensagens
+app.post("/send-message-list", async (req, res) => {
+  const listmessage = req.body;
+  const number = req.body.number;
+  if (connected) {
+    wa.onWhatsApp(number)
+      .then(data => {
+        if (data[0]?.jid) {
+          sendMessageWTyping(wa,listmessage, data[0].jid)
+            .then((result) => {
+              res.status(200).json({
+                status: true,
+                response: result,
+              })
+            })
+            .catch((err) => {
+              res.status(500).json({
+                status: false,
+                response: err,
+              })
+            })
+        } else {
+          res.status(500).json({
+            status: false,
+            response: `Número ${number} não possui registro no WhatsApp.`,
+          })
+        }
+      })
+      .catch(async err => {
+        console.log(err)
+        if (err?.output?.statusCode === DisconnectReason.connectionClosed) {
+          console.log('WhatsApp desconectado')
+        }
+      })
+  }
+})
 server.listen(port, () => {
   console.log(`Servidor rodando em: http://localhost:${port}`)
 })
+
